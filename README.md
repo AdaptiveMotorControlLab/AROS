@@ -2,7 +2,7 @@
 
 ## Overview
 
-This repository contains the code for the paper **"Adversarially Robust Out-of-Distribution Detection Using Lyapunov-Stabilized Embeddings"**, which is currently under review at ICLR 2025. The method, termed **AROS**, employs Neural Ordinary Differential Equations (NODEs) with Lyapunov stability to create robust embeddings for OOD detection, significantly improving performance against adversarial attacks.
+This repository contains the code for the paper **"Adversarially Robust Out-of-Distribution Detection Using Lyapunov-Stabilized Embeddings"**. The method, termed **AROS**, employs Neural Ordinary Differential Equations (NODEs) with Lyapunov stability to create robust embeddings for OOD detection, significantly improving performance against adversarial attacks.
 
 ## Key Features
 
@@ -12,12 +12,16 @@ This repository contains the code for the paper **"Adversarially Robust Out-of-D
 
 ## Repository Structure
 
-- **`data_loader.py`**: Contains the data loading utilities for training and evaluation.
-- **`evaluate.py`**: Implements the evaluation metrics and testing routines for the AROS model.
-- **`Main.py`**: The main script for training and testing AROS, combining all components.
-- **`stability_loss_function.py`**: Defines the Lyapunov-based loss function used for stabilizing the NODE dynamics.
-- **`utils.py`**: Includes various helper functions used throughout the project.
+
+- **AROS/**
+  - **`data_loader.py`**: Contains the data loading utilities for training and evaluation.
+  - **`evaluate.py`**: Implements the evaluation metrics and testing routines for the AROS model.
+  - **`Main.py`**: The main script for training and testing AROS, combining all components.
+  - **`stability_loss_function.py`**: Defines the Lyapunov-based loss function used for stabilizing the NODE dynamics.
+  - **`utils.py`**: Includes various helper functions used throughout the project.
 - **`requirements.txt`**: Lists the dependencies required to run the project.
+
+
 
 ## Installation
 
