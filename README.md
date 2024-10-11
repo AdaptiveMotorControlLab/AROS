@@ -4,6 +4,9 @@
 
 This repository contains the code for the paper **"Adversarially Robust Out-of-Distribution Detection Using Lyapunov-Stabilized Embeddings"**. The method, termed **AROS**, employs Neural Ordinary Differential Equations (NODEs) with Lyapunov stability to create robust embeddings for OOD detection, significantly improving performance against adversarial attacks.
 
+
+![AROS](https://github.com/user-attachments/assets/dd5d5dd9-2650-4746-9983-5abf6d7eedfc)
+
 ## Key Features
 
 - **Lyapunov Stability for OOD Detection**: Ensures that perturbed inputs converge back to stable equilibrium points, improving robustness against adversarial attacks.
