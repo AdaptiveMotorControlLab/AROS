@@ -1,7 +1,24 @@
 import numpy as np
-from tqdm import tqdm
+from tqdm.notebook import tqdm
 from sklearn.metrics import roc_curve, roc_auc_score, precision_recall_curve, auc
 from utils import *
+import argparse
+import torch
+import torch.nn as nn
+import torchvision
+import torchvision.transforms as transforms
+from torch.utils.data import DataLoader
+from sklearn.mixture import GaussianMixture
+import numpy as np
+from scipy.stats import multivariate_normal
+from sklearn.covariance import EmpiricalCovariance
+from robustbench.utils import load_model
+import torch.nn.functional as F
+from torch.utils.data import TensorDataset
+from torch.optim.lr_scheduler import StepLR
+from tqdm.notebook import tqdm
+
+
 def compute_fpr95(labels, scores):
 
     fpr, tpr, thresholds = roc_curve(labels, scores)
@@ -60,9 +77,9 @@ def get_clean_AUC(model, test_loader , device, num_classes):
     auroc = compute_auroc(test_labels, anomaly_scores)
     aupr = compute_aupr(test_labels, anomaly_scores)
 
-    # print(f"FPR95: {fpr95}")
+    print(f"FPR95: {fpr95}")
     print(f"AUROC is: {auroc}")
-    # print(f"AUPR: {aupr}")
+    print(f"AUPR: {aupr}")
 
     return auc
 
@@ -598,9 +615,9 @@ def get_auc_adversarial(model, test_loader, test_attack,   device, num_classes):
     auroc = compute_auroc(test_labels, anomaly_scores)
     aupr = compute_aupr(test_labels, anomaly_scores)
 
-    # print(f"FPR95: {fpr95}")
+    print(f"FPR95: {fpr95}")
     print(f"AUROC is: {auroc}")
-    # print(f"AUPR: {aupr}")
+    print(f"AUPR: {aupr}")
 
 
     if is_train:
