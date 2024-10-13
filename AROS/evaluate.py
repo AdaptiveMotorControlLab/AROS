@@ -711,3 +711,176 @@ class PGD_AUC(Attack):
         return adv_images
 
 
+
+
+
+
+def auc_MSP_adversarial(model, test_loader, test_attack,   device, num_classes):
+    is_train = model.training
+    model.eval()
+
+    soft = torch.nn.Softmax(dim=1)
+    anomaly_scores = []
+    preds = []
+    test_labels = []
+    test_labels_acc = []
+    with tqdm(test_loader, unit="batch") as tepoch:
+            torch.cuda.empty_cache()
+            for i, (data, target) in enumerate(tepoch):
+                data, target = data.to(device), target.to(device)
+                adv_data = test_attack(data, target)
+
+                output  = model(adv_data)
+
+                predictions = output.argmax(dim=1, keepdim=True).squeeze()
+                preds += predictions.detach().cpu().numpy().tolist()
+
+                # probs = soft(output).squeeze()
+                # anomaly_scores += probs[:, num_classes].detach().cpu().numpy().tolist()
+
+
+                probs = soft(output)
+
+                max_probabilities,_ = torch.max(probs[:,:num_classes] , dim=1)
+
+
+
+
+                anomaly_scores+=max_probabilities.detach().cpu().numpy().tolist()
+                # anomaly_scores += probs[:, num_classes].detach().cpu().numpy().tolist()
+                target = target == num_classes
+                test_labels += target.detach().cpu().numpy().tolist()
+    anomaly_scores=[x * -1 for x in anomaly_scores]
+    auc = roc_auc_score(test_labels,  anomaly_scores)
+
+    if is_train:
+        model.train()
+    else:
+        model.eval()
+
+    print(auc)
+    return auc
+
+
+class PGD_MSP(Attack):
+    r"""
+    PGD in the paper 'Towards Deep Learning Models Resistant to Adversarial Attacks'
+    [https://arxiv.org/abs/1706.06083]
+
+    Distance Measure : Linf
+
+    Arguments:
+        model (nn.Module): model to attack.
+        eps (float): maximum perturbation. (Default: 8/255)
+        alpha (float): step size. (Default: 2/255)
+        steps (int): number of steps. (Default: 10)
+        random_start (bool): using random initialization of delta. (Default: True)
+
+    Shape:
+        - images: :math:`(N, C, H, W)` where `N = number of batches`, `C = number of channels`,        `H = height` and `W = width`. It must have a range [0, 1].
+        - labels: :math:`(N)` where each value :math:`y_i` is :math:`0 \leq y_i \leq` `number of labels`.
+        - output: :math:`(N, C, H, W)`.
+
+    Examples::
+        >>> attack = torchattacks.PGD(model, eps=8/255, alpha=1/255, steps=10, random_start=True)
+        >>> adv_images = attack(images, labels)
+
+    """
+
+    def __init__(self, model, eps=8/255, alpha=2/255, steps=10, random_start=True, num_classes=10):
+        super().__init__("PGD", model)
+        self.eps = eps
+        self.alpha = alpha
+        self.steps = steps
+        self.random_start = random_start
+        self.supported_mode = ['default', 'targeted']
+        self.num_classes = num_classes
+
+    def forward(self, images, labels):
+        r"""
+        Overridden.
+        """
+
+        images = images.clone().detach().to(self.device)
+        labels = labels.clone().detach().to(self.device)
+
+        softmax = nn.Softmax(dim=1)
+        adv_images = images.clone().detach()
+
+        if self.random_start:
+            # Starting at a uniformly random point
+            adv_images = adv_images + \
+                torch.empty_like(adv_images).uniform_(-self.eps, self.eps)
+            adv_images = torch.clamp(adv_images, min=0, max=1).detach()
+
+        ones = torch.ones_like(labels)
+        multipliers = -1*(ones - 2 * ones * (labels == self.num_classes))
+
+        for _ in range(self.steps):
+            adv_images.requires_grad = True
+            outputs = self.get_logits(adv_images)
+            final_outputs = softmax(outputs)
+            # choose the value of probability of ood
+
+            max_probabilities  = torch.max(final_outputs  , dim=1)[0]
+
+
+
+            cost = torch.sum(max_probabilities * multipliers)
+
+
+
+            # Update adversarial images
+            grad = torch.autograd.grad(cost, adv_images,
+                                       retain_graph=False, create_graph=False)[0]
+
+            adv_images = adv_images.detach() + self.alpha*grad.sign()
+            delta = torch.clamp(adv_images - images,
+                                min=-self.eps, max=self.eps)
+            adv_images = torch.clamp(images + delta, min=0, max=1).detach()
+
+        # imshow(torchvision.utils.make_grid(adv_images.cpu()))
+        # print(multipliers)
+        return adv_images
+
+
+
+
+
+def auc_MSP(model, test_loader , device, num_classes):
+    is_train = model.training
+    model.eval()
+
+    soft = torch.nn.Softmax(dim=1)
+    anomaly_scores = []
+    preds = []
+    test_labels = []
+    test_labels_acc = []
+
+    with torch.no_grad():
+        with tqdm(test_loader, unit="batch") as tepoch:
+            torch.cuda.empty_cache()
+            for i, (data, target) in enumerate(tepoch):
+                data, target = data.to(device), target.to(device)
+                output = model(data)
+
+                predictions = output.argmax(dim=1, keepdim=True).squeeze()
+                preds += predictions.detach().cpu().numpy().tolist()
+
+                # probs = soft(output).squeeze()
+                # anomaly_scores += probs[:, num_classes].detach().cpu().numpy().tolist() model
+
+                probs = soft(output)
+                max_probabilities,_ = torch.max(probs[:,:num_classes] , dim=1)
+                anomaly_scores+=max_probabilities.detach().cpu().numpy().tolist()
+                # anomaly_scores += probs[:, num_classes].detach().cpu().numpy().tolist()
+                target = target == num_classes
+
+                test_labels += target.detach().cpu().numpy().tolist()
+    anomaly_scores=[x * -1 for x in anomaly_scores]
+    auc = roc_auc_score(test_labels,  anomaly_scores)
+    print(auc)
+
+
+    return auc
+
