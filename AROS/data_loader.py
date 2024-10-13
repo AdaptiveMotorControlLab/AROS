@@ -6,6 +6,12 @@ from torchvision.datasets import CIFAR10, CIFAR100, MNIST, SVHN, FashionMNIST
 
 
 
+
+
+
+ 
+
+
 class LabelChangedDataset(Dataset):
     def __init__(self, original_dataset, new_label):
         self.original_dataset = original_dataset
@@ -42,7 +48,7 @@ testset_CIFAR10 = torchvision.datasets.CIFAR10(
     root='./data', train=False, download=True, transform=transform_tensor)
 
 
-trainloader_CIFAR10 = DataLoader(trainset_CIFAR10, batch_size=64, shuffle=True, num_workers=2)
+trainloader_CIFAR10 = DataLoader(trainset_CIFAR10, batch_size=65, shuffle=True, num_workers=2)
 
 testloader_CIFAR10 = DataLoader(testset_CIFAR10, batch_size=16, shuffle=False, num_workers=2)
 
@@ -55,20 +61,34 @@ trainset_CIFAR100 = torchvision.datasets.CIFAR100(
 testset_CIFAR100 = torchvision.datasets.CIFAR100(
     root='./data', train=False, download=True, transform=transform_tensor)
 
+ 
+
 trainloader_CIFAR100 = DataLoader(trainset_CIFAR100, batch_size=64, shuffle=True, num_workers=2)
 
 testloader_CIFAR100 = DataLoader(testset_CIFAR100, batch_size=16, shuffle=False, num_workers=2)
+
+
+
+
+
 
 
 testset_CIFAR10_relabled = LabelChangedDataset(testset_CIFAR10, new_label=100)
 testset_CIFAR100_relabled = LabelChangedDataset(testset_CIFAR100, new_label=10)
 
 
-testloader_CIFAR10_vs_CIFAR100 = DataLoader(ConcatDataset([testset_CIFAR10, testset_CIFAR100_relabled]), shuffle=False, batch_size=16)
-testloader_CIFAR100_vs_CIFAR10 = DataLoader(ConcatDataset([testset_CIFAR100, testset_CIFAR10_relabled]), shuffle=False, batch_size=16)
+testloader_CIFAR10_vs_CIFAR100 = DataLoader(ConcatDataset([testset_CIFAR10, testset_CIFAR100_relabled]), shuffle=False, batch_size=8)
+testloader_CIFAR100_vs_CIFAR10 = DataLoader(ConcatDataset([testset_CIFAR100, testset_CIFAR10_relabled]), shuffle=False, batch_size=8)
 
 def get_loaders(in_dataset='CIFAR10'):
     if in_dataset == 'cifar10':
-        return trainloader_CIFAR10, testloader_CIFAR10, testloader_CIFAR10_vs_CIFAR100
+        return trainloader_CIFAR10, testloader_CIFAR10,testset_CIFAR10, testloader_CIFAR10_vs_CIFAR100
+    if in_dataset == 'cifar100':
+        return trainloader_CIFAR100, testloader_CIFAR100,testset_CIFAR100, testloader_CIFAR100_vs_CIFAR10
     else:
         raise ValueError(f"Dataset '{in_dataset}' is not supported.")
+
+
+
+
+
