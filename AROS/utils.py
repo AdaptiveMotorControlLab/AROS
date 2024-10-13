@@ -21,6 +21,8 @@ test_savepath='./CIFAR10_test_resnetNov1.npz'
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 
+
+
 weight_diag = 10
 weight_offdiag = 0
 weight_f = 0.1
@@ -30,15 +32,17 @@ weight_lossc =  0
 
 exponent = 1.0
 exponent_off = 0.1
-exponent_f = 50
+exponent_f = 20
 time_df = 1
 trans = 1.0
 transoffdig = 1.0
 numm = 16
 
-batches_per_epoch = 128
 
-ODE_FC_odebatch = 64
+
+ 
+ 
+ODE_FC_odebatch = 32
 
 class Identity(nn.Module):
     def __init__(self):
@@ -56,7 +60,7 @@ class ConcatFC(nn.Module):
 class ODEfunc_mlp(nn.Module):
     def __init__(self, dim):
         super(ODEfunc_mlp, self).__init__()
-        self.fc1 = ConcatFC(64, 64)
+        self.fc1 = ConcatFC(128, 128)
         self.act1 = torch.sin
         self.nfe = 0
     def forward(self, t, x):
@@ -65,21 +69,8 @@ class ODEfunc_mlp(nn.Module):
         out = self.act1(out)
         return out
 
-class ODEBlock(nn.Module):
-    def __init__(self, odefunc):
-        super(ODEBlock, self).__init__()
-        self.odefunc = odefunc
-        self.integration_time = torch.tensor([0, 5]).float()
-    def forward(self, x):
-        self.integration_time = self.integration_time.type_as(x)
-        out = odeint(self.odefunc, x, self.integration_time, rtol=1e-3, atol=1e-3)
-        return out[1]
-    @property
-    def nfe(self):
-        return self.odefunc.nfe
-    @nfe.setter
-    def nfe(self, value):
-        self.odefunc.nfe = value
+
+
 
 class ODEBlocktemp(nn.Module):
     def __init__(self, odefunc):
@@ -100,7 +91,7 @@ class MLP_OUT_ORTH1024(nn.Module):
     def __init__(self,layer_dim_):
         super(MLP_OUT_ORTH1024, self).__init__()
         self.layer_dim_ = layer_dim_
-        self.fc0 = ORTHFC(self.layer_dim_, 64, False)
+        self.fc0 = ORTHFC(self.layer_dim_, 128, False)
     def forward(self, input_):
         h1 = self.fc0(input_)
         return h1
@@ -149,7 +140,7 @@ class MLP_OUT_LINEAR(nn.Module):
     def __init__(self,class_numbers):
         self.class_numbers = class_numbers
         super(MLP_OUT_LINEAR, self).__init__()
-        self.fc0 = nn.Linear(64, class_numbers)
+        self.fc0 = nn.Linear(128, class_numbers)
     def forward(self, input_):
         h1 = self.fc0(input_)
         return h1
@@ -158,8 +149,8 @@ class MLP_OUT_BALL(nn.Module):
     def __init__(self,class_numbers):
         super(MLP_OUT_BALL, self).__init__()
         self.class_numbers = class_numbers
-        self.fc0 = nn.Linear(64, class_numbers, bias=False)
-        self.fc0.weight.data = torch.randn([class_numbers,64])
+        self.fc0 = nn.Linear(128, class_numbers, bias=False)
+        self.fc0.weight.data = torch.randn([class_numbers,128])
     def forward(self, input_):
         h1 = self.fc0(input_)
         return h1
@@ -362,26 +353,24 @@ def train(net, epoch,trainloader,optimizer):
 def one_hot(x, K):
     return np.array(x[:, None] == np.arange(K)[None, :], dtype=int)
 
- 
-class ODEBlock(nn.Module):
 
+
+class ODEBlock(nn.Module):
     def __init__(self, odefunc):
         super(ODEBlock, self).__init__()
         self.odefunc = odefunc
         self.integration_time = torch.tensor([0, 5]).float()
-
     def forward(self, x):
         self.integration_time = self.integration_time.type_as(x)
         out = odeint(self.odefunc, x, self.integration_time, rtol=1e-3, atol=1e-3)
         return out[1]
-
     @property
     def nfe(self):
         return self.odefunc.nfe
-
     @nfe.setter
     def nfe(self, value):
         self.odefunc.nfe = value
+  
 
 
 
@@ -501,48 +490,7 @@ def f_regularizer(odefunc, z):
 
 
 
-def save_training_feature(model, dataset_loader, fake_embeddings_loader=None ):
-    x_save = []
-    y_save = []
-    modulelist = list(model)
-
-    for x, y in dataset_loader:
-        x = x.to(device)
-        y_ = y.numpy()  # No need to use np.array here
-
-        # Forward pass through the model up to the desired layer
-        for l in modulelist[0:2]:
-            x = l(x)
-        xo = x
-
-        x_ = xo.cpu().detach().numpy()
-        x_save.append(x_)
-        y_save.append(y_)
-
-    # Processing fake embeddings if provided
-    if fake_embeddings_loader is not None:
-        for x, y in fake_embeddings_loader:
-            x = x.to(device)
-            y_ = y.numpy()  # No need to use np.array here
-
-            # Forward pass through the model up to the desired layer
-            for l in modulelist[1:2]:
-                x = l(x)
-            xo = x
-
-            x_ = xo.cpu().detach().numpy()
-            x_save.append(x_)
-            y_save.append(y_)
-
-    # Concatenate all collected data before saving
-    x_save = np.concatenate(x_save)
-    y_save = np.concatenate(y_save)
-
-
-    # Save the concatenated arrays to a file
-    np.savez(train_savepath, x_save=x_save, y_save=y_save)
-
-
+ 
 
 def save_testing_feature(model, dataset_loader):
     x_save = []
@@ -600,3 +548,108 @@ class DensemnistDatasetTest(Dataset):
         y = self.y[idx]
 
         return x,y
+
+
+
+
+class ODEBlocktemp(nn.Module):
+    def __init__(self, odefunc):
+        super(ODEBlocktemp, self).__init__()
+        self.odefunc = odefunc
+        self.integration_time = torch.tensor([0, 5]).float()
+    def forward(self, x):
+        out = self.odefunc(0, x)
+        return out
+    @property
+    def nfe(self):
+        return self.odefunc.nfe
+    @nfe.setter
+    def nfe(self, value):
+        self.odefunc.nfe = value
+
+
+def accuracy(model, dataset_loader):
+    total_correct = 0
+    for x, y in dataset_loader:
+        x = x.to(device)
+        y = one_hot(np.array(y.numpy()), 10)
+
+
+        target_class = np.argmax(y, axis=1)
+        predicted_class = np.argmax(model(x).cpu().detach().numpy(), axis=1)
+        total_correct += np.sum(predicted_class == target_class)
+    return total_correct / len(dataset_loader.dataset)
+
+
+
+def save_training_feature(model, dataset_loader, fake_embeddings_loader=None ):
+    x_save = []
+    y_save = []
+    modulelist = list(model)
+    # Processing fake embeddings if provided
+    if fake_embeddings_loader is not None:
+        for x, y in fake_embeddings_loader:
+            x = x.to(device)
+            y_ = y.numpy()  # No need to use np.array here
+
+            # Forward pass through the model up to the desired layer
+            for l in modulelist[1:2]:
+                x = l(x)
+            xo = x
+
+            x_ = xo.cpu().detach().numpy()
+            x_save.append(x_)
+            y_save.append(y_)
+
+
+    x_save = []
+    y_save = []
+    for x, y in dataset_loader:
+        x = x.to(device)
+        y_ = y.numpy()  # No need to use np.array here
+
+        # Forward pass through the model up to the desired layer
+        for l in modulelist[0:2]:
+            x = l(x)
+        xo = x
+
+        x_ = xo.cpu().detach().numpy()
+        
+        x_save.append(x_)
+        
+        y_save.append(y_)
+
+ 
+    x_save = np.concatenate(x_save)
+ 
+    y_save = np.concatenate(y_save)
+
+ 
+    np.savez(train_savepath, x_save=x_save, y_save=y_save)
+
+
+
+def save_testing_feature(model, dataset_loader):
+    x_save = []
+    y_save = []
+    modulelist = list(model)
+    layernum = 0
+    for x, y in dataset_loader:
+        x = x.to(device)
+        y_ = np.array(y.numpy())
+
+        for l in modulelist[0:2]:
+              x = l(x)
+        xo = x
+        x_ = xo.cpu().detach().numpy()
+        x_save.append(x_)
+        y_save.append(y_)
+
+    x_save = np.concatenate(x_save)
+    y_save = np.concatenate(y_save)
+
+    np.savez(test_savepath, x_save=x_save, y_save=y_save)
+
+
+
+
