@@ -12,7 +12,6 @@ from stability_loss_function import *
 def main():
     parser = argparse.ArgumentParser(description="Hyperparameters for the script")
 
-    # Define the hyperparameters controlled via CLI 'Ding2020MMA' 
     parser.add_argument('--fast', type=bool, default=True, help='Toggle between fast and full fake data generation modes')
     parser.add_argument('--epoch1', type=int, default=2, help='Number of epochs for stage 1')
     parser.add_argument('--epoch2', type=int, default=1, help='Number of epochs for stage 2')
@@ -96,19 +95,13 @@ def main():
       fake_data = np.vstack(fake_data)
       fake_data = torch.tensor(fake_data).float()
       fake_data = F.normalize(fake_data, p=2, dim=1)
-
       fake_labels = torch.full((fake_data.shape[0],), 10)
       fake_loader = DataLoader(TensorDataset(fake_data, fake_labels), batch_size=128, shuffle=True)
 
     if args.fast==True:
-
-
-        noise_std = 0.1  # standard deviation of noise
-        noisy_embeddings = torch.tensor(embeddings) + noise_std * torch.randn_like(torch.tensor(embeddings))
-
+        noisy_embeddings = torch.tensor(embeddings) + args.noise_std * torch.randn_like(torch.tensor(embeddings))
         # Normalize Noisy Embeddings
         noisy_embeddings = F.normalize(noisy_embeddings, p=2, dim=1)[:len(trainloader.dataset)//num_classes]
-
         # Convert to DataLoader if needed
         fake_labels = torch.full((noisy_embeddings.shape[0],), num_classes)[:len(trainloader.dataset)//num_classes]
         fake_loader = DataLoader(TensorDataset(noisy_embeddings, fake_labels), batch_size=128, shuffle=True) 
