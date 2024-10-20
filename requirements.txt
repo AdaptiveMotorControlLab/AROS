@@ -1,3 +1,4 @@
 geotorch
 torchdiffeq
 git+https://github.com/RobustBench/robustbench.git
+timm==1.0.9
