@@ -1,13 +1,13 @@
 
-import aros
+import aros_node
 import argparse
 import torch
 import torch.nn as nn
-from aros.evaluate import *
-from aros.utils import *
+from aros_node.evaluate import *
+from aros_node.utils import *
 from tqdm.notebook import tqdm
-from aros.data_loader import *
-from aros.stability_loss_function import *
+from aros_node.data_loader import *
+from aros_node.stability_loss_function import *
 
 def main():
     parser = argparse.ArgumentParser(description="Hyperparameters for the script")

@@ -3,7 +3,7 @@ import torch
 from torch.utils.data import DataLoader, Subset
 from torchvision.datasets import CIFAR10, CIFAR100
 from torchvision.transforms import ToTensor
-from aros import (
+from aros_node import (
     LabelChangedDataset,
     get_subsampled_subset,
     get_loaders,
