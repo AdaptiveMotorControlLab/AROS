@@ -1,4 +1,4 @@
-name: Update internal release
+name: release
 
 on:
   push:
