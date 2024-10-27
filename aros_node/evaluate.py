@@ -1,7 +1,7 @@
 import numpy as np
 from tqdm.notebook import tqdm
 from sklearn.metrics import roc_curve, roc_auc_score, precision_recall_curve, auc
-from utils import *
+from aros_node.utils import *
 import argparse
 import torch
 import torch.nn as nn
