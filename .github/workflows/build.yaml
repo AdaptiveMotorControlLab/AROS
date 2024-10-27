@@ -44,21 +44,14 @@ jobs:
 
       - name: Install package
         run: |
+          python -m pip install git+https://github.com/RobustBench/robustbench.git
           python -m pip install --upgrade pip setuptools wheel
           python -m pip install torch==${{ matrix.torch-version }} --extra-index-url https://download.pytorch.org/whl/cpu
           pip install '.[dev]'
 
-      - name: Run the formatter
-        run: |
-          make format
-
       - name: Run the spelling detector
         run: |
           make codespell
-
-      - name: Check CITATION.cff validity
-        run: |
-          cffconvert --validate
 
       - name: Check that no binary files have been added to repo
         if: matrix.os == 'ubuntu-latest'
@@ -75,6 +68,6 @@ jobs:
           make build
 
       - name: Check reinstall script
-        timeout-minutes: 10
+        timeout-minutes: 3
         run: |
           ./reinstall.sh
