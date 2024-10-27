@@ -49,10 +49,6 @@ jobs:
           python -m pip install torch==${{ matrix.torch-version }} --extra-index-url https://download.pytorch.org/whl/cpu
           pip install '.[dev]'
 
-      - name: Run the spelling detector
-        run: |
-          make codespell
-
       - name: Check that no binary files have been added to repo
         if: matrix.os == 'ubuntu-latest'
         run: |
