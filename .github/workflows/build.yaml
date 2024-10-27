@@ -48,11 +48,12 @@ jobs:
           python -m pip install --upgrade pip setuptools wheel
           python -m pip install torch==${{ matrix.torch-version }} --extra-index-url https://download.pytorch.org/whl/cpu
           pip install '.[dev]'
-
+      
       - name: Run pytest tests
         timeout-minutes: 10
         run: |
-          make test
+          pip install pytest
+          python -m pytest
 
       - name: Build package
         run: |
