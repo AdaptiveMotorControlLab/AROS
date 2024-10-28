@@ -1,4 +1,9 @@
 geotorch
+torch
 torchdiffeq
-git+https://github.com/RobustBench/robustbench.git
 timm==1.0.9
+robustbench
+numpy
+scikit-learn
+scipy
+tqdm

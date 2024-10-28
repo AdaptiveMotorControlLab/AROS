@@ -2,8 +2,8 @@ import torch
 from robustbench.utils import load_model
 import torch.nn as nn
 from torch.nn.parameter import Parameter
-import utils
-from utils import *
+import aros_node.utils
+from aros_node.utils import *
 from torch.utils.data import DataLoader, Dataset, TensorDataset, Subset, SubsetRandomSampler, ConcatDataset
 import numpy as np
 from tqdm.notebook import tqdm

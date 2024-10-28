@@ -1,13 +1,13 @@
 
-!pip install -r requirements.txt
+import aros_node
 import argparse
 import torch
 import torch.nn as nn
-from evaluate import *
-from utils import *
+from aros_node.evaluate import *
+from aros_node.utils import *
 from tqdm.notebook import tqdm
-from data_loader import *
-from stability_loss_function import *
+from aros_node.data_loader import *
+from aros_node.stability_loss_function import *
 
 def main():
     parser = argparse.ArgumentParser(description="Hyperparameters for the script")
