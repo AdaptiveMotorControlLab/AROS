@@ -12,9 +12,7 @@ set -e # abort on error
 
 pip uninstall -y aros-node
 
-# Get version info after uninstalling --- this will automatically get the
-# most recent version based on the source code in the current directory.
-# $(tools/get_cebra_version.sh)
+# Get version
 VERSION=0.0.1
 echo "Upgrading to AROS v${VERSION}"
 
