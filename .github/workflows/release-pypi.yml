@@ -37,7 +37,7 @@ jobs:
         run: |
           make dist
           ls dist/
-          tar tvf dist/aros-node-*.tar.gz
+          tar tvf dist/aros_node-*.tar.gz
           python3 -m twine upload --repository testpypi dist/*
 
       - name: Build and publish to PyPI
@@ -48,5 +48,5 @@ jobs:
         run: |
           make dist
           ls dist/
-          tar tvf dist/aros-node-*.tar.gz
+          tar tvf dist/aros_node-*.tar.gz
           python3 -m twine upload dist/*
