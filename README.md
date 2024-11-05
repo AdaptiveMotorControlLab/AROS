@@ -1,11 +1,20 @@
 # AROS: Adversarially Robust Out-of-Distribution Detection through Stability
 
+
+[![PyPI version](https://badge.fury.io/py/aros-node.svg)](https://badge.fury.io/py/aros-node)
+![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-purple)
+[![Paper](https://badgen.net/badge/icon/arXiv?icon=awesome&label&color=orange&style=flat-square)](https://arxiv.org/abs/2410.10744)
+
 ## Overview
 
 This repository contains the code for the paper **"Adversarially Robust Out-of-Distribution Detection Using Lyapunov-Stabilized Embeddings"**. The method, termed **AROS**, employs Neural Ordinary Differential Equations (NODEs) with Lyapunov stability to create robust embeddings for OOD detection, significantly improving performance against adversarial attacks.
 This repository contains the code for the paper **"Adversarially Robust Out-of-Distribution Detection Using Lyapunov-Stabilized Embeddings"**. The method, termed **AROS**, employs Neural Ordinary Differential Equations (NODEs) with Lyapunov stability to create robust embeddings for OOD detection, significantly improving performance against adversarial attacks. Additionally, the repository includes two notebooks: one demonstrates the training and evaluation process on the CIFAR-10 and CIFAR-100 datasets, while the other focuses on the ablation study.
 
 ![AROS](https://github.com/user-attachments/assets/b0d9e7f8-e39d-4bae-aee2-79a247b5e87f)
+
+## Preprint
+
+Check out our preprint now out on arXiv! [Adversarially Robust Out-of-Distribution Detection Using Lyapunov-Stabilized Embeddings](https://arxiv.org/abs/2410.10744). Hossein Mirzaeri & Mackenzie W. Mathis. Oct 2024.
 
  
 ## Key Features
@@ -37,6 +46,28 @@ This repository contains the code for the paper **"Adversarially Robust Out-of-D
 ## Installation
 
 To install the necessary packages, run:
+```python
+pip install git+https://github.com/RobustBench/robustbench.git
+pip install aros-node
+```
+
+To install the necessary packages from source (locally), run:
 
 ```bash
 pip install -r requirements.txt
+```
+
+## Citation
+```
+@article{mirzaei2024aros,
+      title={Adversarially Robust Out-of-Distribution Detection Using Lyapunov-Stabilized Embeddings}, 
+      author={Hossein Mirzaei and Mackenzie W. Mathis},
+      year={2024},
+      eprint={2410.10744},
+      journal={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/2410.10744}, 
+}
+```
+
+
