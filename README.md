@@ -2,6 +2,7 @@
 
 
 [![PyPI version](https://badge.fury.io/py/aros-node.svg)](https://badge.fury.io/py/aros-node)
+[![PyPI Downloads](https://static.pepy.tech/badge/aros-node)](https://pepy.tech/projects/aros-node)
 ![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-purple)
 [![Paper](https://badgen.net/badge/icon/arXiv?icon=awesome&label&color=orange&style=flat-square)](https://arxiv.org/abs/2410.10744)
 

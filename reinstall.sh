@@ -13,7 +13,7 @@ set -e # abort on error
 pip uninstall -y aros-node
 
 # Get version
-VERSION=0.0.1rc1
+VERSION=0.0.1
 echo "Upgrading to AROS v${VERSION}"
 
 # Upgrade the build system (PEP517/518 compatible)
