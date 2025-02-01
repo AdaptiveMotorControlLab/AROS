@@ -25,6 +25,8 @@ jobs:
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip
+          restore-keys: |
+            ${{ runner.os }}-pip
 
       - name: Checkout code
         uses: actions/checkout@v3
