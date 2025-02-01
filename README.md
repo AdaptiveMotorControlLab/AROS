@@ -12,6 +12,20 @@ This repository contains the code for the paper **"Adversarially Robust Out-of-D
 
 ![AROS](https://github.com/user-attachments/assets/b0d9e7f8-e39d-4bae-aee2-79a247b5e87f)
 
+## Publication 
+
+AROS 💍 is accepted to the **International Conference on Learning Representations 2025** (ICLR 2025)!
+
+```
+@article{mirzaei2025aros,
+      title={Adversarially Robust Out-of-Distribution Detection Using Lyapunov-Stabilized Embeddings}, 
+      author={Hossein Mirzaei and Mackenzie W. Mathis},
+      year={2025},
+      journal={The Thirteenth International Conference on Learning Representations},
+      url={https://openreview.net/forum?id=GrDne4055L}, 
+}
+```
+
 ## Preprint
 
 Check out our preprint now out on arXiv! [Adversarially Robust Out-of-Distribution Detection Using Lyapunov-Stabilized Embeddings](https://arxiv.org/abs/2410.10744). Hossein Mirzaeri & Mackenzie W. Mathis. Oct 2024.
@@ -57,7 +71,21 @@ To install the necessary packages from source (locally), run:
 pip install -r requirements.txt
 ```
 
-## Citation
+## Citations
+
+ICLR:
+
+```
+@article{mirzaei2025aros,
+      title={Adversarially Robust Out-of-Distribution Detection Using Lyapunov-Stabilized Embeddings}, 
+      author={Hossein Mirzaei and Mackenzie W. Mathis},
+      year={2025},
+      journal={The Thirteenth International Conference on Learning Representations},
+      url={https://openreview.net/forum?id=GrDne4055L}, 
+}
+```
+arXiv:
+
 ```
 @article{mirzaei2024aros,
       title={Adversarially Robust Out-of-Distribution Detection Using Lyapunov-Stabilized Embeddings}, 
