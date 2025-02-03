@@ -23,11 +23,6 @@ jobs:
 
     runs-on: ${{ matrix.os }}
 
-    steps:
-      - name: Clear pip cache
-        run: |
-          if ($Env:RUNNER_OS -eq "Windows") { Remove-Item -Recurse -Force $env:USERPROFILE\.cache\pip } else { rm -rf ~/.cache/pip }
-
       - name: Cache dependencies
         id: pip-cache
         uses: actions/cache@v3
