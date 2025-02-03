@@ -26,7 +26,7 @@ jobs:
     steps:
       - name: Clear pip cache
         run: |
-          rm -rf ~/.cache/pip
+          if ($Env:RUNNER_OS -eq "Windows") { Remove-Item -Recurse -Force $env:USERPROFILE\.cache\pip } else { rm -rf ~/.cache/pip }
 
       - name: Cache dependencies
         id: pip-cache
