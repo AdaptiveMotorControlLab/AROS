@@ -23,11 +23,6 @@ jobs:
 
     runs-on: ${{ matrix.os }}
 
-    steps:
-      - name: Clear pip cache
-        run: |
-          rm -rf ~/.cache/pip
-
       - name: Cache dependencies
         id: pip-cache
         uses: actions/cache@v3
