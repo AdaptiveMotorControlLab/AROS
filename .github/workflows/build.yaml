@@ -15,9 +15,6 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         python-version: ["3.12"]
-        # We aim to support the versions on pytorch.org
-        # as well as selected previous versions on
-        # https://pytorch.org/get-started/previous-versions/
         torch-version: ["2.4.0"]
         include:
           - os: windows-latest
@@ -27,6 +24,10 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
+      - name: Clear pip cache
+        run: |
+          rm -rf ~/.cache/pip
+
       - name: Cache dependencies
         id: pip-cache
         uses: actions/cache@v3
@@ -46,7 +47,7 @@ jobs:
         run: |
           python -m pip install git+https://github.com/RobustBench/robustbench.git
           python -m pip install --upgrade pip setuptools wheel
-          python -m pip install -U packaging
+          python -m pip install packaging==24.2
           python -m pip install torch==${{ matrix.torch-version }} --extra-index-url https://download.pytorch.org/whl/cpu
           pip install '.[dev]'
       
